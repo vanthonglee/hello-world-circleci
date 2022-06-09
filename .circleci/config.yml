@@ -7,11 +7,10 @@ version: 2.1
 jobs:
   save_hello_world_output:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:18.3.0
     steps:
       - checkout
       - run:
-          name: "Print Hello"
           command: "echo text to output here > output.txt"
       # save the files your deploy step needs
       - persist_to_workspace:
@@ -21,7 +20,7 @@ jobs:
 
   print_output_file:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:18.3.0
     steps:
       # attach the files you persisted in the doing-things-job
       - attach_workspace:
@@ -45,7 +44,7 @@ jobs:
 
   print_hello:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:18.3.0
     steps:
       - checkout
       - run:
@@ -54,7 +53,7 @@ jobs:
 
   print_world:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:18.3.0
     steps:
       - checkout
       - run:
