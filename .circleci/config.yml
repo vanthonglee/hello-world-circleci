@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: "echo text to output here > output.txt"
+          command: "echo text to output here > ~/output.txt"
       # save the files your deploy step needs
       - persist_to_workspace:
           root: ~/ # relative path to our working directory
