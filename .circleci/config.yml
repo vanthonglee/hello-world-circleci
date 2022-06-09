@@ -14,9 +14,9 @@ jobs:
           command: "echo text to output here > output.txt"
       # save the files your deploy step needs
       - persist_to_workspace:
-          root: . # relative path to our working directory
+          root: ~/ # relative path to our working directory
           paths: # file globs which will be persisted to the workspace
-            - ./output.txt
+            - output.txt
 
   print_output_file:
     docker:
@@ -24,10 +24,8 @@ jobs:
     steps:
       # attach the files you persisted in the doing-things-job
       - attach_workspace:
-          at: . # relative path to our working directory
-      - run:
-          command: |
-            echo "cat ./output.txt"
+          at: ~/ # relative path to our working directory
+      - run: cat ./output.txt
 
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
