@@ -41,14 +41,23 @@ jobs:
       - run: cat ~/output.txt
 
   print_env:
-    docker:
-      - image: cimg/base:2021.11
+    <<: *defaults
     steps:
       - checkout
       - run:
           name: "echo an env var that is part of our project"
           command: |
             echo Hello, $MY_NAME
+
+  handle_error:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: return 1
+      - run:
+          name: on error
+          command: echo "Hello Error!"
+          when: on_fail
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -61,3 +70,4 @@ workflows:
           requires:
             - save_hello_world_output
       - print_CW_ID_via_resuable_code
+      - handle_error
