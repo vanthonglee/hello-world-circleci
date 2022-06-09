@@ -16,7 +16,7 @@ jobs:
       - persist_to_workspace:
           root: . # relative path to our working directory
           paths: # file globs which will be persisted to the workspace
-            - rand_*
+            - ./output.txt
 
   print_output_file:
     docker:
