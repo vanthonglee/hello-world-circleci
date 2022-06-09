@@ -5,6 +5,31 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  save_hello_world_output:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: "Print Hello"
+          command: "echo text to output here > output.txt"
+      # save the files your deploy step needs
+      - persist_to_workspace:
+          root: . # relative path to our working directory
+          paths: # file globs which will be persisted to the workspace
+            - rand_*
+
+  print_output_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      # attach the files you persisted in the doing-things-job
+      - attach_workspace:
+          at: . # relative path to our working directory
+      - run:
+          command: |
+            echo "cat output.txt"
+
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
