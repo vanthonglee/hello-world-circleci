@@ -2,12 +2,26 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+defaults: &defaults
+  docker:
+    - image: cimg/node:18.3.0
+
+commands:
+  print_pipeline_id:
+    description: "prints the Circle CI Workflow ID from its environment variable named $CIRCLE_WORKFLOW_ID to the console"
+    steps:
+      - run: echo ${CIRCLE_WORKFLOW_ID}
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  print_CW_ID_via_resuable_code:
+    <<: *defaults
+    steps:
+      - print_pipeline_id
+
   save_hello_world_output:
-    docker:
-      - image: cimg/node:18.3.0
+    <<: *defaults
     steps:
       - checkout
       - run:
@@ -19,44 +33,12 @@ jobs:
             - output.txt
 
   print_output_file:
-    docker:
-      - image: cimg/node:18.3.0
+    <<: *defaults
     steps:
       # attach the files you persisted in the doing-things-job
       - attach_workspace:
           at: ~/ # relative path to our working directory
       - run: cat ~/output.txt
-
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-  print_hello:
-    docker:
-      - image: cimg/node:18.3.0
-    steps:
-      - checkout
-      - run:
-          name: "Print Hello"
-          command: "echo Hello"
-
-  print_world:
-    docker:
-      - image: cimg/node:18.3.0
-    steps:
-      - checkout
-      - run:
-          name: "Print World"
-          command: "echo World"
 
   print_env:
     docker:
@@ -73,11 +55,6 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
-      - print_hello
-      - print_world:
-          requires:
-            - print_hello
       - print_env
       - save_hello_world_output
       - print_output_file:
